@@ -1,0 +1,10 @@
+server:
+    port: 8080
+
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/tran_manager
+        username: smitc
+        password: '2832'
+        driverClassName: org.postgresql.Driver
+        dialect: org.hibernate.dialect.PostgreSQLDialect
