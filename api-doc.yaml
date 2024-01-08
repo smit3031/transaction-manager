@@ -1,0 +1,157 @@
+openapi: 3.0.0
+info:
+  title: Transaction API
+  version: 1.0.0
+paths:
+  /save:
+    post:
+      summary: Save a new transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              userId: 1
+              transactionId: "abc135"
+              amount_usd: 300.22
+              currency: "USD"
+              paymentMethod: "Credit Card"
+              timestamp: "2024-01-08T12:34:56"
+              debit: true
+              credit: false
+            schema:
+              $ref: '#/components/schemas/TransactionDTO'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                userId: 1
+                transactionId: "abc135"
+                amount_inr: 24953.49
+                amount_usd: 300.22
+                currency: "USD"
+                paymentMethod: "Credit Card"
+                timestamp: "2024-01-08T12:34:56"
+                isDebit: true
+                isCredit: false
+              schema:
+                $ref: '#/components/schemas/TransactionDTO'
+  /dailyReport/{userId}:
+    get:
+      summary: Get the daily report for a specific user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                transactions:
+                  - timestamp: "2024-01-08T12:34:56"
+                    currency: "USD"
+                    transactionId: "abc131"
+                    amountInr: 10403.68
+                    isCredit: true
+                    amountUsd: 125.25
+                    isDebit: false
+                  - timestamp: "2024-01-08T12:34:56"
+                    currency: "USD"
+                    transactionId: "abc131"
+                    amountInr: 19540.64
+                    isCredit: false
+                    amountUsd: 235.25
+                    isDebit: true
+                  - timestamp: "2024-01-08T12:34:56"
+                    currency: "USD"
+                    transactionId: "abc132"
+                    amountInr: 19540.64
+                    isCredit: false
+                    amountUsd: 235.25
+                    isDebit: true
+                  - timestamp: "2024-01-08T12:34:56"
+                    currency: "INR"
+                    transactionId: "abc132"
+                    amountInr: 8235.25
+                    isCredit: false
+                    amountUsd: 99.13
+                    isDebit: true
+                  - timestamp: "2024-01-08T12:34:56"
+                    currency: "USD"
+                    transactionId: "abc135"
+                    amountInr: 24953.49
+                    isCredit: false
+                    amountUsd: 300.22
+                    isDebit: true
+                totalAmountInINR: 82673.70
+                totalAmountInUSD: 995.10
+                totalUsdPayments: 895.97
+                totalInrPayments: 8235.25
+                totalCredit: 10403.68
+                totalDebit: 72270.02
+              schema:
+                $ref: '#/components/schemas/DailyReport'
+        '404':
+          description: No transactions found for the user
+components:
+  schemas:
+    TransactionDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        transactionId:
+          type: string
+        isDebit:
+          type: boolean
+        isCredit:
+          type: boolean
+        amount_inr:
+          type: number
+          format: double
+        amount_usd:
+          type: number
+          format: double
+        currency:
+          type: string
+        paymentMethod:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    TransactionSummary:
+      type: object
+      # Define properties for TransactionSummary as needed
+    DailyReport:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionSummary'
+        totalAmountInINR:
+          type: number
+          format: double
+        totalAmountInUSD:
+          type: number
+          format: double
+        totalUsdPayments:
+          type: number
+          format: double
+        totalInrPayments:
+          type: number
+          format: double
+        totalCredit:
+          type: number
+          format: double
+        totalDebit:
+          type: number
+          format: double
