@@ -1,7 +1,6 @@
 package com.example.service;
 
 import com.example.dto.TransactionDTO;
-import com.example.entity.TransactionSummary;
 import com.example.model.DailyReport;
 import org.springframework.stereotype.Service;
 

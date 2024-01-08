@@ -1,4 +1,4 @@
-package com.example;
+package com.example.service;
 
 import com.example.dto.TransactionDTO;
 import com.example.entity.UserEntity;
@@ -6,7 +6,6 @@ import com.example.exceptions.NoTransactionsFoundException;
 import com.example.model.DailyReport;
 import com.example.repository.TransactionRepository;
 import com.example.repository.UserRepository;
-import com.example.service.TransactionServiceImpl;
 import com.example.util.CurrencyConverter;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

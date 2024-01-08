@@ -16,13 +16,15 @@ public class GlobalExceptionHandler {
      * Handles IllegalArgumentException and returns an HTTP 500 Internal Server Error response.
      *
      * @param e The IllegalArgumentException to be handled.
-     * @return ResponseEntity containing an error message.
+     * @return ResponseEntity containing a detailed error message.
      */
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        String errorMessage = "An internal server error occurred due to an invalid argument.";
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error: " + e.getMessage());
+                .body("Error: " + errorMessage + "\nDetails: " + e.getMessage());
     }
 }
+
 

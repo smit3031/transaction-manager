@@ -1,6 +1,5 @@
-package com.example;
+package com.example.controller;
 
-import com.example.controller.TransactionController;
 import com.example.dto.TransactionDTO;
 import com.example.exceptions.NoTransactionsFoundException;
 import com.example.model.DailyReport;
@@ -56,5 +55,6 @@ class TransactionControllerTests {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
 }
 
