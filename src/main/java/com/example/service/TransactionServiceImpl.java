@@ -42,6 +42,8 @@ public class TransactionServiceImpl implements TransactionService{
      */
     @Override
     public TransactionDTO saveTransaction(TransactionDTO transactionDTO) {
+        log.info("Entering saveTransaction method with TransactionDTO: {}", transactionDTO);
+
         if (transactionDTO.getAmount_inr()==null && transactionDTO.getAmount_usd()==null){
             throw new IllegalArgumentException("Amount can't be null provide it in either usd or inr");
         }
@@ -50,6 +52,7 @@ public class TransactionServiceImpl implements TransactionService{
         log.info("Amount in INR : {} and in USD : {} ", transactionDTO.getAmount_inr(), transactionDTO.getAmount_usd());
         Transaction transaction = createTransactionEntity(transactionDTO, user);
         transactionRepository.save(transaction);
+        log.info("Exiting saveTransaction method with result: {}", transactionDTO);
         return transactionDTO;
     }
 
@@ -62,6 +65,8 @@ public class TransactionServiceImpl implements TransactionService{
      */
     @Override
     public DailyReport getDailyReport(Long userId) {
+        log.info("Entering getDailyReport method with userId: {}", userId);
+
         DailyReport dailyReport = new DailyReport();
         Optional<List<TransactionSummary>> transactionSummaryList = transactionRepository.getTransactionByUserId(userId);
         if (transactionSummaryList.isPresent()){
@@ -73,6 +78,7 @@ public class TransactionServiceImpl implements TransactionService{
             throw new NoTransactionsFoundException("No transactions found on the current date.");
         }
 
+        log.info("Exiting getDailyReport method with result: {}", dailyReport);
         return dailyReport;
     }
 
@@ -83,7 +89,7 @@ public class TransactionServiceImpl implements TransactionService{
      * @param transactions  The list of transactions.
      */
     public void calculateTotals(DailyReport dailyReport, List<TransactionSummary> transactions) {
-        log.info("Inside calculate data");
+        log.info("Entering calculateTotals method with DailyReport: {} and transactions: {}", dailyReport, transactions);
 
         BigDecimal totalINRPayments = transactions.stream()
                 .filter(transaction -> Objects.nonNull(transaction.getAmountInr()) && "INR".equals(transaction.getCurrency()))
@@ -129,7 +135,7 @@ public class TransactionServiceImpl implements TransactionService{
         dailyReport.setTotalDebit(totalDebit);
         log.info("debit is {}", totalDebit);
 
-        log.info("got the data");
+        log.info("Exiting calculateTotals method with updated DailyReport: {}", dailyReport);
     }
 
 
@@ -161,19 +167,24 @@ public class TransactionServiceImpl implements TransactionService{
      *
      * @param transactionDTO The TransactionDTO to be updated.
      */
-    public void setCurrencyData(TransactionDTO transactionDTO){
-        if ("INR".equals(transactionDTO.getCurrency())){
+    public void setCurrencyData(TransactionDTO transactionDTO) {
+        log.info("Setting currency data for TransactionDTO: {}", transactionDTO);
+
+        if ("INR".equals(transactionDTO.getCurrency())) {
             BigDecimal amount = transactionDTO.getAmount_inr();
             BigDecimal usd = currencyConverter.convert(amount, "INR", "USD");
             transactionDTO.setAmount_usd(usd);
+            log.info("Converted INR to USD. Updated amount_inr: {}, amount_usd: {}", amount, usd);
         } else if ("USD".equals(transactionDTO.getCurrency())) {
-            log.info("usd amount giben");
+            log.info("USD amount given");
             BigDecimal amount = transactionDTO.getAmount_usd();
             BigDecimal inr = currencyConverter.convert(amount, "USD", "INR");
             transactionDTO.setAmount_inr(inr);
-            log.info("inr amount is : {}", inr);
-        } else{
+            log.info("Converted USD to INR. Updated amount_usd: {}, amount_inr: {}", amount, inr);
+        } else {
             throw new IllegalArgumentException("Currency type not supported!");
         }
+
+        log.info("Currency data set. Updated TransactionDTO: {}", transactionDTO);
     }
 }
