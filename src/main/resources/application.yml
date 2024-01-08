@@ -8,3 +8,9 @@ spring:
         password: '2832'
         driverClassName: org.postgresql.Driver
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+exchange:
+    rate:
+        api:
+            url: https://api.fxratesapi.com/latest
+

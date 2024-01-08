@@ -20,8 +20,9 @@ public class Transaction {
     private String transactionId;
     private boolean isDebit;
     private boolean isCredit;
+    @Column(nullable = false)
     private BigDecimal amount_inr;
-
+    @Column(nullable = false)
     private BigDecimal amount_usd;
     private String currency;
     private String paymentMethod;
